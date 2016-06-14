@@ -13,8 +13,8 @@ V = sort_eigenvalues( eigenvectors, eigenvalues );
 %    V(2*i-1, :) = eigenvectors(:, index(i)).'; % neg eig
 %    V(2*i, :) = eigenvectors(:, index(2*n+1-i)).'; % pos eig
 % end
-rounding_const = 100000;
-rounded_eigenvalues = round((abs(real(eigenvalues)) + 1/rounding_const)*rounding_const)/rounding_const;
+rounding_const = 1000;
+rounded_eigenvalues = floor((abs(real(eigenvalues)) + 0.1/rounding_const)*rounding_const)/rounding_const;
 [num_degen_eigenval, eigenval] = hist(rounded_eigenvalues, unique(rounded_eigenvalues));
 num_degen_eigenval = sort(num_degen_eigenval, 'descend');
 
@@ -24,17 +24,16 @@ num_blocks = size(num_degen_eigenval, 2);
 processed_eigenvectors = 0;
 for block=1:num_blocks
    num_eigenval = num_degen_eigenval(block);
-%    if mod(num_eigenval, 2) == 1
-%        disp(eigenvalues);
-%        disp(rounded_eigenvalues);
-%    end
+   if mod(num_eigenval, 2) == 1
+       disp(eigenvalues);
+       disp(rounded_eigenvalues);
+   end
    T = zeros(num_eigenval/2, num_eigenval/2);
    for i=1:num_eigenval/2
        for j=1:num_eigenval/2
            T(i, j) = V(processed_eigenvectors+2*i, :)*V(processed_eigenvectors+2*j-1, :).';
        end
    end
-   disp(T);
    U = (inv(T)).';
    V_copy = V;
    for i=1:num_eigenval/2

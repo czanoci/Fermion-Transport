@@ -1,5 +1,5 @@
 % Parameters
-w = 0.1; % why values w>5 don't work??
+w = 1000; % why values w>0.1 don't match??
 gamma = 1;
 
 t_values = zeros(1, 1000);

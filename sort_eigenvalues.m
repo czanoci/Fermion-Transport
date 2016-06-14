@@ -16,9 +16,8 @@ for i=1:2*n
     aug_eigenvectors(i, 2) = imag(eigenvalues(i));
     aug_eigenvectors(i, 3:end) = eigenvectors(:, i);
 end
-
-aug_eigenvectors = sortrows(aug_eigenvectors, [1, 2]);
-%disp(aug_eigenvectors);
+[~, sortedIdx] = sortrows(real(aug_eigenvectors), [1, 2]);
+aug_eigenvectors = aug_eigenvectors(sortedIdx, :);
 V = zeros(2*n, 2*n);
 
 for i=1:n
