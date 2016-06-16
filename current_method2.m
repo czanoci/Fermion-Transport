@@ -9,8 +9,9 @@ H = [[0, 0, 0, 1i*w/4];
     [0, 1i*w/4, 0, 0];
     [-1i*w/4, 0, 0, 0]];
 
-% Matrix of Lindblad operators
-L = [[0, 0, uR/2, -1i*uR/2];
+% Matrix of Lindblad operators ADDED 1/sqrt(2) to account for diff in
+% lindblad eq.
+L = 1/sqrt(2)*[[0, 0, uR/2, -1i*uR/2];
     [uL/2, -1i*uL/2, 0, 0];
     [0, 0, sqrt(gamma)/2, 1i*sqrt(gamma)/2];
     [sqrt(gamma)/2, 1i*sqrt(gamma)/2, 0, 0]];

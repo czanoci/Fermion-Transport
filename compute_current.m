@@ -6,11 +6,15 @@ n = N/4;
 eigenvalues = diag(eigenvalues);
 
 V = sort_eigenvalues( eigenvectors, eigenvalues);
-
+% IMPROVE THIS
 rounding_const = 1000;
 rounded_eigenvalues = floor((abs(real(eigenvalues)) + 0.1/rounding_const)*rounding_const)/rounding_const;
-[num_degen_eigenval, eigenval] = hist(rounded_eigenvalues, unique(rounded_eigenvalues));
-num_degen_eigenval = sort(num_degen_eigenval, 'descend');
+if size(unique(rounded_eigenvalues)) == 1
+    num_degen_eigenval = size(rounded_eigenvalues, 1);
+else
+    [num_degen_eigenval, eigenval] = hist(rounded_eigenvalues, unique(rounded_eigenvalues));
+    num_degen_eigenval = sort(num_degen_eigenval, 'descend');
+end
 
 % number of different eigenvalues (up to sign)
 num_blocks = size(num_degen_eigenval, 2);
