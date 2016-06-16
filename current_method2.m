@@ -1,7 +1,5 @@
 function [ current ] = current_method2( w, gamma, t)
 
-% uL = sqrt(t);
-% uR = gamma/sqrt(t);
 uL = sqrt(gamma*t);
 uR = sqrt(gamma/t);
 
@@ -20,20 +18,23 @@ L = [[0, 0, uR/2, -1i*uR/2];
 M = compute_M(L);
 A = compute_A(H, M);
 
-if t == 3
-    disp(A);
+if A ~= -A.'
+    disp('Matrix A not anti-symmetric');
 end
 
 [current, V, eig] = compute_current(A);
 
-[n, ~] = size(V);
-N = zeros(n, n);
-for i=1:n
-    for j=1:n
-        N(i, j) = V(i, :)*V(j, :).';
-    end
-end
-%disp(N);
+
+
+
+% [n, ~] = size(V);
+% N = zeros(n, n);
+% for i=1:n
+%     for j=1:n
+%         N(i, j) = V(i, :)*V(j, :).';
+%     end
+% end
+% disp(N);
 
 
 

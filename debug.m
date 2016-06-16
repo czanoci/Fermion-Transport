@@ -1,9 +1,9 @@
 % gamma plus
 g1=5;
 % gamma minus
-g2=3;
+g2=4;
 
-h = 300;
+h = 10000;
 
 H = [[0, -1i/2*h];
     [1i/2*h, 0]];
@@ -31,12 +31,13 @@ n = n/2;
 [eigenvectors, eigenvalues] = eig(A);
 eigenvalues = diag(eigenvalues)
 
-[~, index] = sort(real(eigenvalues));
-V = zeros(2*n, 2*n);
-for i=1:n
-   V(2*i-1, :) = eigenvectors(:, index(i)); % neg eig
-   V(2*i, :) = eigenvectors(:, index(2*n+1-i)); % pos eig
-end
+V = sort_eigenvalues( eigenvectors, eigenvalues);
+% [~, index] = sort(real(eigenvalues));
+% V = zeros(2*n, 2*n);
+% for i=1:n
+%    V(2*i-1, :) = eigenvectors(:, index(i)); % neg eig
+%    V(2*i, :) = eigenvectors(:, index(2*n+1-i)); % pos eig
+% end
 
 rounded_eigenvalues = round(abs(eigenvalues)*10000)/10000;
 [num_degen_eigenval, eigenval] = hist(rounded_eigenvalues, unique(rounded_eigenvalues));
@@ -77,7 +78,8 @@ end
 
 w1w2 = w1w2/2;
 
-disp(w1w2);
+disp(1/2+1j/2*w1w2);
+disp((g1+g2)/(2*g1));
 
 [n, ~] = size(V);
 N = zeros(n, n);

@@ -1,6 +1,6 @@
 % Parameters
-w = 1000; % why values w>0.1 don't match??
-gamma = 1;
+w = 0.1; % why values w>gamma don't match??
+gamma = 3;
 
 t_values = zeros(1, 1000);
 c1_values = zeros(1, 1000);
