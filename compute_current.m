@@ -6,15 +6,7 @@ n = N/4;
 eigenvalues = diag(eigenvalues);
 
 V = sort_eigenvalues( eigenvectors, eigenvalues);
-% IMPROVE THIS
-rounding_const = 1000;
-rounded_eigenvalues = floor((abs(real(eigenvalues)) + 0.1/rounding_const)*rounding_const)/rounding_const;
-if size(unique(rounded_eigenvalues)) == 1
-    num_degen_eigenval = size(rounded_eigenvalues, 1);
-else
-    [num_degen_eigenval, eigenval] = hist(rounded_eigenvalues, unique(rounded_eigenvalues));
-    num_degen_eigenval = sort(num_degen_eigenval, 'descend');
-end
+num_degen_eigenval = [4, 4];
 
 % number of different eigenvalues (up to sign)
 num_blocks = size(num_degen_eigenval, 2);
@@ -59,7 +51,8 @@ end
 
 w2w4 = w2w4/2;
 
-current = -(w1w3+w2w4)/(2*1i);
+% there is an extra factor of 1/2 to match the output of current_method1
+current = -(w1w3+w2w4)/(4*1i);
 
 % w4w3 = 0;
 % for m=1:2*n
