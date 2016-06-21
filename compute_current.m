@@ -41,19 +41,9 @@ for block=1:num_blocks
 end
 
 %% Use Theorem 3 / Eq. (47) to compute the quadratic observables wiwj
-w1w3 = 0;
-for m=1:2*n
-   w1w3 = w1w3 + V(2*m, 1)*V(2*m-1, 5) - V(2*m, 2)*V(2*m-1, 6) - 1i*V(2*m, 2)*V(2*m-1, 5) - 1i*V(2*m, 1)*V(2*m-1, 6); 
-end
+w1w3 = quadratic_observable( V, 1, 3 );
 
-w1w3 = w1w3/2;
-
-w2w4 = 0;
-for m=1:2*n
-   w2w4 = w2w4 + V(2*m, 3)*V(2*m-1, 7) - V(2*m, 4)*V(2*m-1, 8) - 1i*V(2*m, 4)*V(2*m-1, 7) - 1i*V(2*m, 3)*V(2*m-1, 8); 
-end
-
-w2w4 = w2w4/2;
+w2w4 = quadratic_observable( V, 2, 4 );
 
 %% Finally, compute the current
 % there is an extra factor of 1/2 to match the output of current_method1
