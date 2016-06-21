@@ -1,4 +1,4 @@
-function [ current ] = current_method2(w, gamma, beta_L, mu_L, beta_R, mu_R)
+function [ current ] = current_prosen(w, gamma, beta_L, mu_L, beta_R, mu_R)
 % Computes the current for the two-site model using the method described in
 % Prosen's paper
 
@@ -36,6 +36,25 @@ if A ~= -A.'
     disp('Matrix A not anti-symmetric');
 end
 
-%% Compute the current using Theorem 3 from Prosen's paper
-current = compute_current(A);
+%% Compute eigenvalues and eigenvectors
+[N, ~] = size(A);
+n = N/4;
+[eigenvectors, eigenvalues] = eig(A);
+eigenvalues = diag(eigenvalues);
+
+%% Sort the eigenvectors according to their eigenvalues
+% The order is beta1, -beta1, beta2, -beta2... where Re(beta1)>=Re(beta2)...
+[ V, num_degen_eigenval ] = sort_eigenvalues( eigenvectors, eigenvalues);
+
+%% Normalize eigenvectors in V so that they satisfy Eq. (30)
+V = normalize_V( V, num_degen_eigenval );
+
+%% Use Theorem 3 / Eq. (47) to compute the quadratic observables wiwj
+w1w3 = quadratic_observable( V, 1, 3 );
+
+w2w4 = quadratic_observable( V, 2, 4 );
+
+%% Finally, compute the current
+% there is an extra factor of 1/2 to match the output of current_method1
+current = -(w1w3+w2w4)/(4*1i);
 

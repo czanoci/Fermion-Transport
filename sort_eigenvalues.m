@@ -1,4 +1,4 @@
-function [ V ] = sort_eigenvalues( eigenvectors, eigenvalues)
+function [ V, num_degen_eigenval ] = sort_eigenvalues( eigenvectors, eigenvalues)
 % Sorts eigenvectors such that their eigenvalues are arranged in the form
 % -a-b*i = -beta1
 % -a+b*i = -beta2
@@ -27,6 +27,13 @@ end
 % Break ties based on the imaginary part of the eigenvalues. (col 2)
 [~, sortedIdx] = sortrows(real(aug_eigenvectors), [1, 2]);
 aug_eigenvectors = aug_eigenvectors(sortedIdx, :);
+
+% Compute the number of eigenvalues that have the same real part (up to sign)
+if size(unique(abs(aug_eigenvectors(:, 1)))) > 1
+    [num_degen_eigenval, ~] = hist(abs(aug_eigenvectors(:, 1)), unique(abs(aug_eigenvectors(:, 1))));
+    num_degen_eigenval = fliplr(num_degen_eigenval);
+else 
+    num_degen_eigenval = size(aug_eigenvectors, 1);
 
 V = zeros(4*n, 4*n);
 % Pair the eigenvectors in the entries of V

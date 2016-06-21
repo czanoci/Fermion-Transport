@@ -1,7 +1,7 @@
 %% Parameters
-w = 20; 
+w = 10; 
 gamma = 1;
-beta_L = 1;
+beta_L = 2;
 beta_R = 1;
 
 %% Evaluation
@@ -11,8 +11,8 @@ c2_values = zeros(1, 1000);
 for i=1:1000
    t = 0.5 + (i-1)*0.1;
    t_values(i) = t;
-   c1_values(i) = current_method1(w, gamma, beta_L, -log(t)-log(gamma), beta_R, log(t)-log(gamma));
-   c2_values(i) = real(current_method2(w, gamma, beta_L, -log(t)-log(gamma), beta_R, log(t)-log(gamma)));
+   c1_values(i) = current_analytical(w, gamma, beta_L, -log(t)-log(gamma), beta_R, log(t)-log(gamma));
+   c2_values(i) = real(current_prosen(w, gamma, beta_L, -log(t)-log(gamma), beta_R, log(t)-log(gamma)));
 end
 
 %% Plot

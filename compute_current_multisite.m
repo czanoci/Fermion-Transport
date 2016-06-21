@@ -29,29 +29,10 @@ eigenvalues = diag(eigenvalues);
 
 %% Sort the eigenvectors according to their eigenvalues
 % The order is beta1, -beta1, beta2, -beta2... where Re(beta1)>=Re(beta2)...
-[V, num_degen_eigenval] = sort_eigenvalues_multisite( eigenvectors, eigenvalues);
+[V, num_degen_eigenval] = sort_eigenvalues( eigenvectors, eigenvalues);
 
-% number of different eigenvalues (up to sign)
-num_blocks = size(num_degen_eigenval, 2);
-processed_eigenvectors = 0;
-for block=1:num_blocks
-   num_eigenval = num_degen_eigenval(block);
-   T = zeros(num_eigenval/2, num_eigenval/2);
-   for i=1:num_eigenval/2
-       for j=1:num_eigenval/2
-           T(i, j) = V(processed_eigenvectors+2*i, :)*V(processed_eigenvectors+2*j-1, :).';
-       end
-   end
-   U = (inv(T)).';
-   V_copy = V;
-   for i=1:num_eigenval/2
-       V(processed_eigenvectors+2*i-1, :) = 0;
-       for j=1:num_eigenval/2
-           V(processed_eigenvectors+2*i-1, :) = V(processed_eigenvectors+2*i-1, :) + U(i, j)*V_copy(processed_eigenvectors+2*j-1, :);
-       end
-   end
-   processed_eigenvectors = processed_eigenvectors + num_eigenval;
-end
+%% Normalize eigenvectors in V so that they satisfy Eq. (30)
+V = normalize_V( V, num_degen_eigenval );
 
 % Make sure matrix V is normalized correctly
 diff = V*(V.') - compute_J(n);
@@ -60,4 +41,7 @@ if sum(abs(diff)) > 1E-5;
     disp(sum(abs(diff)));
 end
 
-current = -(quadratic_observable(V, 2*nL+nW-1, 2*nL+nW+1)+quadratic_observable(V, 2*nL+nW, 2*nL+nW+2))/(4*1i);
+%% Use Theorem 3 / Eq. (47) to compute the quadratic observables wiwj and the current
+% Note there is an extra factor of -2 as opposed to the two-site model
+
+current = (quadratic_observable(V, 2*nL+nW-1, 2*nL+nW+1)+quadratic_observable(V, 2*nL+nW, 2*nL+nW+2))/(2*1i);
