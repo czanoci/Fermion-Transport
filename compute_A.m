@@ -9,10 +9,10 @@ A = zeros(2*N, 2*N);
 
 for j=1:N
     for k=1:N
-        A(2*j-1, 2*k-1) = -2*1i*H(j, k) - M(j, k) + M(k, j);
-        A(2*j-1, 2*k) = 2*1i*M(k, j);
-        A(2*j, 2*k-1) = -2*1i*M(j, k);
-        A(2*j, 2*k) = -2*1i*H(j, k) + M(j, k) - M(k, j);
+        A(2*j-1, 2*k-1) = -2*1i*H(j, k) + M(j, k) - M(k, j);
+        A(2*j-1, 2*k) = 2*1i*M(j, k);
+        A(2*j, 2*k-1) = -2*1i*M(k, j);
+        A(2*j, 2*k) = -2*1i*H(j, k) - M(j, k) + M(k, j);
     end
 end
 

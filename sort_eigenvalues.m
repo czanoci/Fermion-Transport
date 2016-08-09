@@ -16,30 +16,56 @@ n = size(eigenvalues, 1) / 4;
 % precision, they may be slightly different, e.g. 1.83249999 and 1.8325000
 % In order to sort the eigenvalues correctly, I only use 3 significant
 % digits when comparing them. This is done using digits and vpa functions
-digits(3);
+
 for i=1:4*n
-    aug_eigenvectors(i, 1) = vpa(real(eigenvalues(i)));
-    aug_eigenvectors(i, 2) = vpa(imag(eigenvalues(i)));
+    aug_eigenvectors(i, 1) = real(eigenvalues(i));
+    aug_eigenvectors(i, 2) = imag(eigenvalues(i));
     aug_eigenvectors(i, 3:end) = eigenvectors(:, i);
 end
 
-% Now sort the eigenvectors based on the real part of the eigenvalues (col 1).
-% Break ties based on the imaginary part of the eigenvalues. (col 2)
-[~, sortedIdx] = sortrows(real(aug_eigenvectors), [1, 2]);
-aug_eigenvectors = aug_eigenvectors(sortedIdx, :);
+dot_products = (eigenvectors.')*eigenvectors;
+threshold = 0.1;
+dot_products( abs(dot_products) >= threshold ) = 1;
+dot_products( abs(dot_products) < threshold ) = 0;
+seen = [];
+groups = {};
+num_groups = 0;
 
-% Compute the number of eigenvalues that have the same real part (up to sign)
-if size(unique(abs(aug_eigenvectors(:, 1)))) > 1
-    [num_degen_eigenval, ~] = hist(abs(aug_eigenvectors(:, 1)), unique(abs(aug_eigenvectors(:, 1))));
-    num_degen_eigenval = fliplr(num_degen_eigenval);
-else 
-    num_degen_eigenval = size(aug_eigenvectors, 1);
+for i = 1:size(dot_products, 1)
+   if ismember(i, seen) == 0
+       num_groups = num_groups + 1;
+       row = find( dot_products(i, :) == 1 );
+       col = find( dot_products(:, row(1)) == 1).';
+       seen = cat(2, seen, row);
+       seen = cat(2, seen, col);
+       group = aug_eigenvectors([row, col], :);
+       groups{num_groups} = group;
+   end
+end
 
-V = zeros(4*n, 4*n);
-% Pair the eigenvectors in the entries of V
-for i=1:2*n
-   V(2*i-1, :) = aug_eigenvectors(4*n+1-i, 3:end); % pos eig
-   V(2*i, :) = aug_eigenvectors(i, 3:end); % neg eig
+unique_real_parts = zeros(1, num_groups);
+
+for j = 1:num_groups
+   E = groups{j};
+   unique_real_parts(j) = min(E(:, 1));
+   pos_real_E = E(E(:, 1) >= 0, :);
+   neg_real_E = E(E(:, 1) < 0, :);
+   pos_pos_E = pos_real_E(pos_real_E(:, 2) >= 0, 3:end);
+   pos_neg_E = pos_real_E(pos_real_E(:, 2) < 0, 3:end);
+   neg_pos_E = neg_real_E(neg_real_E(:, 2) >= 0, 3:end);
+   neg_neg_E = neg_real_E(neg_real_E(:, 2) < 0, 3:end);
+   ordered_E = [pos_pos_E; neg_neg_E; pos_neg_E; neg_pos_E];
+   groups{j} = ordered_E;
+end
+
+[~, index] = sort(unique_real_parts, 'descend');
+V = [];
+num_degen_eigenval = zeros(1, num_groups);
+
+for j = 1:num_groups
+    E = groups{index(j)};
+    num_degen_eigenval(j) = size(E, 1);
+    V = cat(1, V, E);
 end
 
 end

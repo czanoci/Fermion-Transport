@@ -1,30 +1,33 @@
 %% Parameters
-w = 15; 
-ww = 5;
+w = 1; 
+ww = 1;
 gamma = 1;
-nL = 6;
-nW = 14;
-nR = 6;
+nL = 5;
+nW = 20;
+nR = 5;
+site = floor(nL+nW/2);
+mu_R = 0.1;
+mu_L = 0.1;
 
+tic;
 %% Evaluation
-mu_values = zeros(1, 5);
+delta_beta_values = zeros(1, 5);
 current_values = zeros(1, 5);
-sigma_values = zeros(1, 10);
+kappa_values = zeros(1, 10);
 beta_values = zeros(1, 10);
 
 for i=1:10
-    beta_L = 0.01*i;
-    beta_R = 0.01*i;
-    beta_values(i) = 0.01*i;
-    
+    beta = 0.01*i;
+    beta_values(i) = beta;
     for j=1:5
-        mu_L = -0.01*j;
-        mu_R = 0.01*j;
-        mu_values(j) = mu_R-mu_L;
-        current_values(j) = real(compute_current_multisite(w, ww, gamma, beta_L, mu_L, beta_R, mu_R, nL, nW, nR));
+        beta_L = (1-0.05*j)*beta;
+        beta_R = (1+0.05*j)*beta;
+        delta_beta_values(j) = beta_R - beta_L;
+        current_values(j) = real(compute_current_multisite(w, ww, gamma, beta_L, mu_L, beta_R, mu_R, nL, nW, nR, site, 0));
     end
-    slope = current_values / mu_values;
-    sigma_values(i) = slope;
+    slope = current_values / delta_beta_values;
+    kappa_values(i) = slope;
+    disp(i);
 end
 
 % w = 1, ww =1, nL=nR=5, nW=10, beta = 0.01
@@ -37,12 +40,13 @@ end
 %mathematica_sigma_values = [ 0.00132812, 0.001555, 0.00167423, 0.001418, 0.000599181, -0.000612653, 1.61188*1E-7, 1.846*1E-7, 2.08167*1E-7, 2.31908*1E-7];
 
 % w = 15, ww = 5, nL=nR=6, nW = 14, beta=0.01
-mathematica_sigma_values = [ 0.000184101, 0.000363236, 0.000533031, 0.000690132, 0.00083244, 0.000959171, 0.00107075, 0.00116843, 0.00125379, 0.00132812];
+%mathematica_sigma_values = [ 0.000184101, 0.000363236, 0.000533031, 0.000690132, 0.00083244, 0.000959171, 0.00107075, 0.00116843, 0.00125379, 0.00132812];
+toc;
 %% Plot
 figure;
-plot(beta_values, mathematica_sigma_values, 'b');
+%plot(beta_values, mathematica_sigma_values, 'b');
 xlabel('Beta');
-ylabel('Conductivity sigma');
+ylabel('Conductivity kappa');
 hold on;
-plot(beta_values, sigma_values, 'r');
-legend('Mathematica computation', 'Prosen method');
+plot(beta_values, kappa_values, 'r');
+%legend('Mathematica computation', 'Prosen method');

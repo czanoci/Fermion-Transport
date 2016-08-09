@@ -29,19 +29,15 @@ A = compute_A(H, M);
 [n, ~] = size(A);
 n = n/2;
 [eigenvectors, eigenvalues] = eig(A);
-eigenvalues = diag(eigenvalues)
+eigenvalues = diag(eigenvalues);
 
-V = sort_eigenvalues( eigenvectors, eigenvalues);
+[V, num_degen_eigenval] = sort_eigenvalues( eigenvectors, eigenvalues);
 % [~, index] = sort(real(eigenvalues));
 % V = zeros(2*n, 2*n);
 % for i=1:n
 %    V(2*i-1, :) = eigenvectors(:, index(i)); % neg eig
 %    V(2*i, :) = eigenvectors(:, index(2*n+1-i)); % pos eig
 % end
-
-rounded_eigenvalues = round(abs(eigenvalues)*10000)/10000;
-[num_degen_eigenval, eigenval] = hist(rounded_eigenvalues, unique(rounded_eigenvalues));
-num_degen_eigenval = sort(num_degen_eigenval, 'descend');
 
 % number of different eigenvalues (up to sign)
 num_blocks = size(num_degen_eigenval, 2);
@@ -73,12 +69,12 @@ end
 %w1w2 = 1/2*(V(2, 1)*V(1, 3)-V(2, 2)*V(1, 4)-1i*V(2, 2)*V(1, 3)-1i*V(2, 1)*V(1, 4)+V(4, 1)*V(3, 3)-V(4, 2)*V(3, 4)-1i*V(4, 2)*V(3, 3)-1i*V(4, 1)*V(3, 4));
 w1w2 = 0;
 for m=1:n
-   w1w2 = w1w2 + V(2*m, 1)*V(2*m-1, 3) - V(2*m, 2)*V(2*m-1, 4) - 1i*V(2*m, 2)*V(2*m-1, 3) - 1i*V(2*m, 1)*V(2*m-1, 4); 
+   w1w2 = w1w2 + 4*V(2*m, 1)*V(2*m-1, 3);% - V(2*m, 2)*V(2*m-1, 4) - 1i*V(2*m, 2)*V(2*m-1, 3) - 1i*V(2*m, 1)*V(2*m-1, 4); 
 end
 
 w1w2 = w1w2/2;
 
-disp(1/2+1j/2*w1w2);
+disp(1/2-1j/2*w1w2);
 disp((g1+g2)/(2*g1));
 
 [n, ~] = size(V);

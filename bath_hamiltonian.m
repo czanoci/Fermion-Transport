@@ -4,6 +4,10 @@ function [ H ] = bath_hamiltonian( w, bath_size )
 
 H = zeros(bath_size, bath_size);
 
+if bath_size == 1
+    H(1, 1) = -w;
+end
+
 for x=1:bath_size-1
     H(x, x+1) = -w;
     H(x+1, x) = -w;

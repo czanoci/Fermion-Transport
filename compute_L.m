@@ -17,8 +17,8 @@ for row = 1:nR
     vR = sqrt(gamma);
     psi = eigenvectors_R(:, row);
     for col = 1:nR
-        L(row, 2*nL + 2*nW + 2*col - 1) = 1/2*uR*psi(col);
-        L(row, 2*nL + 2*nW + 2*col) = -1i/2*uR*psi(col);
+        L(row, 2*nL + 2*nW + 2*col - 1) = 1/2*uR*conj(psi(col));
+        L(row, 2*nL + 2*nW + 2*col) = -1i/2*uR*conj(psi(col));
         L(nR + row, 2*nL + 2*nW + 2*col - 1) = 1/2*vR*psi(col);
         L(nR + row, 2*nL + 2*nW + 2*col) = 1i/2*vR*psi(col);
     end
@@ -29,8 +29,8 @@ for row = 1:nL
     vL = sqrt(gamma);
     psi = eigenvectors_L(:, row);
     for col = 1:nL
-        L(2*nR + row, 2*col - 1) = 1/2*uL*psi(col);
-        L(2*nR + row, 2*col) = -1i/2*uL*psi(col);
+        L(2*nR + row, 2*col - 1) = 1/2*uL*conj(psi(col));
+        L(2*nR + row, 2*col) = -1i/2*uL*conj(psi(col));
         L(2*nR + nL + row, 2*col - 1) = 1/2*vL*psi(col);
         L(2*nR + nL + row, 2*col) = 1i/2*vL*psi(col);
     end

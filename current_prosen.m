@@ -57,4 +57,3 @@ w2w4 = quadratic_observable( V, 2, 4 );
 %% Finally, compute the current
 % there is an extra factor of 1/2 to match the output of current_method1
 current = -(w1w3+w2w4)/(4*1i);
-
